@@ -1,32 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Reservation } from '../models/reservation';
 import { JsonPipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ReservationService {
 
+  private apiURL= "http://localhost:3001"
   private reservations: Reservation[] = [];
 
-  constructor(){
-    let savedReservations = localStorage.getItem("reservations");
-    this.reservations = savedReservations ? JSON.parse(savedReservations) : [];
-  }
+
+  constructor(private http: HttpClient){}
+
   // CRUD
 
-  getReservations(): Reservation[] {
-    return this.reservations;
+  getReservations(): Observable<Reservation[]> {
+    return this.http.get<Reservation[]>(this.apiURL + "/reservations");
   }
 
-  getReservation(id: string): Reservation | undefined {
-    return this.reservations.find(res => res.id === id);
+  getReservation(id: string): Observable<Reservation> {
+    return this.http.get<Reservation>(this.apiURL + "/reservation/"+id);
   }
 
   addReservation(reservation: Reservation): void {
     reservation.id = Date.now().toString();
 
     this.reservations.push(reservation);
-    localStorage.setItem("reservations", JSON.stringify(this.reservations));
   }
 
   deleteReservation(id: string): void {

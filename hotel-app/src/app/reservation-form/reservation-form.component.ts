@@ -35,10 +35,12 @@ export class ReservationFormComponent {
       if(id){
         let reservation = this.reservationService.getReservation(id)
 
-        if(reservation)
-          this.reservationForm.patchValue(reservation)
+          if(reservation)
+            this.reservationForm.patchValue(reservation)
       }
+
   }
+
   onSubmit() {
       if(this.reservationForm.valid){
         let reservation: Reservation = this.reservationForm.value;
